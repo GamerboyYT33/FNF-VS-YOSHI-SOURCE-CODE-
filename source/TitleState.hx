@@ -45,7 +45,6 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
-	var theCrew:FlxSprite;
 
 	var curWacky:Array<String> = [];
 
@@ -53,14 +52,14 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		//#if polymod
+		#if polymod
 		//polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
-		//#end
+		#end
 		
-		//#if sys
-		//if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
-		//	sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
-		//#end
+		/*#if sys
+		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
+			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
+		#end*/
 
 		@:privateAccess
 		{
@@ -125,7 +124,6 @@ class TitleState extends MusicBeatState
 
 	var logoBl:FlxSprite;
 	var gfDance:FlxSprite;
-	var yoshiDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 
@@ -167,20 +165,17 @@ class TitleState extends MusicBeatState
 		// bg.updateHitbox();
 		add(bg);
 
-	//	if(Main.watermarks) {
-			//logoBl = new FlxSprite(-150, -100);
-			//logoBl.frames = Paths.getSparrowAtlas('KadeEngineLogoBumpin');
-			//logoBl.antialiasing = true;
-			//logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
-			//logoBl.animation.play('bump');
-			//logoBl.updateHitbox();
+		if(Main.watermarks) {
+			logoBl = new FlxSprite(-150, -100);
+			logoBl.frames = Paths.getSparrowAtlas('KadeEngineLogoBumpin');
+			logoBl.antialiasing = true;
+			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
+			logoBl.animation.play('bump');
+			logoBl.updateHitbox();
 			// logoBl.screenCenter();
 			// logoBl.color = FlxColor.BLACK;
-		//} else {
+		} else {
 			logoBl = new FlxSprite(-150, -100);
-			logoBl.scale.set(0.8, 0.8);
-			logoBl.x = -10;
-			logoBl.y = -20;
 			logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 			logoBl.antialiasing = true;
 			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
@@ -188,24 +183,14 @@ class TitleState extends MusicBeatState
 			logoBl.updateHitbox();
 			// logoBl.screenCenter();
 			// logoBl.color = FlxColor.BLACK;
-		//}
-/*
+		}
+
 		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
 		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
 		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		gfDance.antialiasing = true;
 		add(gfDance);
-		add(logoBl);
-*/
-		yoshiDance = new FlxSprite(FlxG.width * 0.6, FlxG.height * 0.07);
-		yoshiDance.frames = Paths.getSparrowAtlas('yoshiDanceTitle');
-		yoshiDance.animation.addByPrefix('idle', 'yoshiDanceTitle', 24);
-		yoshiDance.antialiasing = true;
-		yoshiDance.animation.play('idle');
-		//yoshiDance.x = 300;
-		yoshiDance.y = 180;
-		add(yoshiDance);
 		add(logoBl);
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
@@ -247,16 +232,6 @@ class TitleState extends MusicBeatState
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
-
-		
-		theCrew = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('TheCrew'));
-		add(theCrew);
-		theCrew.visible = false;
-		theCrew.setGraphicSize(Std.int(theCrew.width * 0.6));
-		theCrew.updateHitbox();
-		theCrew.screenCenter(X);
-		theCrew.y = 126;
-		theCrew.antialiasing = true;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
@@ -355,18 +330,17 @@ class TitleState extends MusicBeatState
 				{
 					returnedData[0] = data.substring(0, data.indexOf(';'));
 					returnedData[1] = data.substring(data.indexOf('-'), data.length);
-					// get this fucking thing out
-				  //	if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState && MainMenuState.nightly == "")
-				//	{
-				//		trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
-				//		OutdatedSubState.needVer = returnedData[0];
-				//		OutdatedSubState.currChanges = returnedData[1];
-				//		FlxG.switchState(new OutdatedSubState());
-				//	}
-					//else 
-				//	{
+				  	if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState && MainMenuState.nightly == "")
+					{
+						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
+						OutdatedSubState.needVer = returnedData[0];
+						OutdatedSubState.currChanges = returnedData[1];
+						FlxG.switchState(new OutdatedSubState());
+					}
+					else
+					{
 						FlxG.switchState(new MainMenuState());
-				//	}
+					}
 				}
 				
 				http.onError = function (error) {
@@ -381,10 +355,7 @@ class TitleState extends MusicBeatState
 
 		if (pressedEnter && !skippedIntro && initialized)
 		{
-			new FlxTimer().start(1.2, function(tmr:FlxTimer)
-				{
 			skipIntro();
-				});
 		}
 
 		super.update(elapsed);
@@ -402,23 +373,6 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function createHIGHCoolText(text:String)
-		{
-			var amogusText:Alphabet = new Alphabet(0, 0, text, true, false);
-			amogusText.screenCenter(X);
-			amogusText.y += (textGroup.length * 60) + 70;
-			credGroup.add(amogusText);
-			textGroup.add(amogusText);
-		}
-
-		function createStupidPositionText(text:String)
-			{
-				var amogusText:Alphabet = new Alphabet(0, 0, text, true, false);
-				amogusText.screenCenter(X);
-				amogusText.y += (textGroup.length * 60) + 85;
-				credGroup.add(amogusText);
-				textGroup.add(amogusText);
-			}
 	function addMoreText(text:String)
 	{
 		var coolText:Alphabet = new Alphabet(0, 0, text, true, false);
@@ -442,13 +396,13 @@ class TitleState extends MusicBeatState
 		super.beatHit();
 
 		logoBl.animation.play('bump');
-		//danceLeft = !danceLeft;
-		/*
+		danceLeft = !danceLeft;
+
 		if (danceLeft)
 			gfDance.animation.play('danceRight');
 		else
 			gfDance.animation.play('danceLeft');
-			*/
+
 		FlxG.log.add(curBeat);
 
 		switch (curBeat)
@@ -467,20 +421,21 @@ class TitleState extends MusicBeatState
 			// credTextShit.screenCenter();
 			case 5:
 				if (Main.watermarks)
-					{
-					 trace('okay cool'); // game crashes if i dont add this :/
-					//createCoolText(['BOUGHT TO', 'YOU BY']);
-					//theCrew.visible = true;	
-					}
-					createHIGHCoolText('BOUGHT TO YOU BY');
-			case 6:
-				createStupidPositionText("THESE CLOWNS");
-				theCrew.visible = true;	
+					createCoolText(['Kade Engine', 'by']);
+				else
+					createCoolText(['In Partnership', 'with']);
+			case 7:
+				if (Main.watermarks)
+					addMoreText('KadeDeveloper');
+				else
+				{
+					addMoreText('Newgrounds');
+					ngSpr.visible = true;
+				}
 			// credTextShit.text += '\nNewgrounds';
 			case 8:
 				deleteCoolText();
 				ngSpr.visible = false;
-				theCrew.visible = false;	
 			// credTextShit.visible = false;
 
 			// credTextShit.text = 'Shoutouts Tom Fulp';
@@ -497,13 +452,13 @@ class TitleState extends MusicBeatState
 			// credTextShit.text = "Friday";
 			// credTextShit.screenCenter();
 			case 13:
-				addMoreText('Friday Night Funkin');
+				addMoreText('Friday');
 			// credTextShit.visible = true;
 			case 14:
-				addMoreText('VS');
+				addMoreText('Night');
 			// credTextShit.text += '\nNight';
 			case 15:
-				addMoreText('YOSHI'); // credTextShit.text += '\nFunkin';
+				addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
 
 			case 16:
 				skipIntro();
@@ -517,7 +472,6 @@ class TitleState extends MusicBeatState
 		if (!skippedIntro)
 		{
 			remove(ngSpr);
-			remove(theCrew);
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);

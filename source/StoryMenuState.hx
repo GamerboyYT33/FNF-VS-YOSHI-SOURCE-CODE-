@@ -24,18 +24,36 @@ class StoryMenuState extends MusicBeatState
 	var scoreText:FlxText;
 
 	var weekData:Array<Dynamic> = [
-		['Flower-Garden', "UnderGround", "Spikey-Stroll"]
+		['Tutorial'],
+		['Bopeebo', 'Fresh', 'Dad Battle'],
+		['Spookeez', 'South', "Monster"],
+		['Pico', 'Philly Nice', "Blammed"],
+		['Satin Panties', "High", "Milf"],
+		['Cocoa', 'Eggnog', 'Winter Horrorland'],
+		['Senpai', 'Roses', 'Thorns']
 	];
 	var curDifficulty:Int = 1;
 
-	public static var weekUnlocked:Array<Bool> = [true, true, true];
+	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true];
 
 	var weekCharacters:Array<Dynamic> = [
-		['yoshi', 'bf', 'gf']
+		['', 'bf', 'gf'],
+		['dad', 'bf', 'gf'],
+		['spooky', 'bf', 'gf'],
+		['pico', 'bf', 'gf'],
+		['mom', 'bf', 'gf'],
+		['parents-christmas', 'bf', 'gf'],
+		['senpai', 'bf', 'gf']
 	];
 
 	var weekNames:Array<String> = [
-		"YOSHI'S ISLAND!"
+		"",
+		"Daddy Dearest",
+		"Spooky Month",
+		"PICO",
+		"MOMMY MUST MURDER",
+		"RED SNOW",
+		"Hating Simulator ft. Moawling"
 	];
 
 	var txtWeekTitle:FlxText;
@@ -177,9 +195,11 @@ class StoryMenuState extends MusicBeatState
 		updateText();
 
 		trace("Line 165");
-                #if android
-addVirtualPad(FULL,A_B);
-#end
+
+		#if android
+		addVirtualPad(FULL, A_B);
+		#end
+
 		super.create();
 	}
 
@@ -269,19 +289,23 @@ addVirtualPad(FULL,A_B);
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
 
-			var diffic = "";
-
-			switch (curDifficulty)
-			{
-				case 0:
-					diffic = '-easy';
-				case 2:
-					diffic = '-hard';
-			}
 
 			PlayState.storyDifficulty = curDifficulty;
 
-			PlayState.SONG = Song.loadFromJson(StringTools.replace(PlayState.storyPlaylist[0]," ", "-").toLowerCase() + diffic, StringTools.replace(PlayState.storyPlaylist[0]," ", "-").toLowerCase());
+			// adjusting the song name to be compatible
+			var songFormat = StringTools.replace(PlayState.storyPlaylist[0], " ", "-");
+			switch (songFormat) {
+				case 'Dad-Battle': songFormat = 'Dadbattle';
+				case 'Philly-Nice': songFormat = 'Philly';
+			}
+
+			var poop:String = Highscore.formatSong(songFormat, curDifficulty);
+			PlayState.sicks = 0;
+			PlayState.bads = 0;
+			PlayState.shits = 0;
+			PlayState.goods = 0;
+			PlayState.campaignMisses = 0;
+			PlayState.SONG = Song.loadFromJson(poop, PlayState.storyPlaylist[0]);
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)
